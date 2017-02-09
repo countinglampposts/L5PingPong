@@ -1,0 +1,23 @@
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2008
+
+Project("{F325CF1F-A403-8589-8A20-85BC2B21564E}") = "L5-Ping Pong Game", "Assembly-CSharp.csproj", "{60380E11-D360-6844-0446-297660A56A04}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{60380E11-D360-6844-0446-297660A56A04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60380E11-D360-6844-0446-297660A56A04}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60380E11-D360-6844-0446-297660A56A04}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60380E11-D360-6844-0446-297660A56A04}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Assembly-CSharp.csproj
+	EndGlobalSection
+EndGlobal
