@@ -10,15 +10,33 @@ public class PongGame : MonoBehaviour {
 	[SerializeField]
 	private Rigidbody ballRigidbody;
 	[SerializeField]
+	private Transform ballStartPin;
+	[SerializeField]
 	private Transform rPaddle;
 	[SerializeField]
 	private Transform lPaddle;
+	[SerializeField]
+	private ColliderSurrogate rGoal;
+	[SerializeField]
+	private ColliderSurrogate lGoal;
 
 	private void Start(){
+		LaunchBall();
+
+		rGoal.Initialize(HandleObjectCollidingWithGoal);
+		lGoal.Initialize(HandleObjectCollidingWithGoal);
+	}
+
+	private void LaunchBall(){
+		// Ball is moved to the launch position first
+		ballRigidbody.transform.position = ballStartPin.position;
+
 		// Normalize the the force vector so it's magnitude (ie the ball's velocity) will always be 1
 		Vector3 appliedForce = Random.insideUnitCircle.normalized;
+
 		// Multiply normalized value by the initialBallVelocity
 		appliedForce *= initialBallVelocity;
+
 		// Use ForceMode.VelocityChange to apply the velocity change in a single impulse regardless of weight
 		ballRigidbody.AddForce(appliedForce, ForceMode.VelocityChange);
 	}
@@ -43,8 +61,16 @@ public class PongGame : MonoBehaviour {
 		// This uses fixedDeltaTime because this method is called on FixedUpdate()
 		paddleYDelta *= Time.fixedDeltaTime;
 
+		// Because Vector3 is a struct and not a class its values are passed by value, not reference
+		// Because of this, paddleObject.position is not a reference to an object but a copy of the values stored
 		Vector3 currentPosition = paddleObject.position;
 		currentPosition.y += paddleYDelta;
 		paddleObject.position = currentPosition;
+	}
+
+	private void HandleObjectCollidingWithGoal(GameObject collidedObject){
+		if(collidedObject == ballRigidbody.gameObject){
+			LaunchBall();
+		}
 	}
 }
