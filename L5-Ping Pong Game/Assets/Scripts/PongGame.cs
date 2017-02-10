@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PongGame : MonoBehaviour {
 	[SerializeField]
+	private GameObject ballCollisionEffect;
+	[SerializeField]
 	private float paddleSpeed;
 	[SerializeField]
 	private float initialBallVelocity;
@@ -16,6 +18,10 @@ public class PongGame : MonoBehaviour {
 	[SerializeField]
 	private Transform lPaddle;
 	[SerializeField]
+	private ColliderSurrogate rPaddleCollider;
+	[SerializeField]
+	private ColliderSurrogate lPaddleCollider;
+	[SerializeField]
 	private ColliderSurrogate rGoal;
 	[SerializeField]
 	private ColliderSurrogate lGoal;
@@ -25,6 +31,9 @@ public class PongGame : MonoBehaviour {
 
 		rGoal.Initialize(HandleObjectCollidingWithGoal);
 		lGoal.Initialize(HandleObjectCollidingWithGoal);
+
+		rPaddleCollider.Initialize(HandleObjectCollidingWithPaddle);
+		lPaddleCollider.Initialize(HandleObjectCollidingWithPaddle);
 	}
 
 	private void LaunchBall(){
@@ -71,9 +80,41 @@ public class PongGame : MonoBehaviour {
 		paddleObject.position = currentPosition;
 	}
 
-	private void HandleObjectCollidingWithGoal(GameObject collidedObject){
-		if(collidedObject == ballRigidbody.gameObject){
+	private void HandleObjectCollidingWithGoal(Collision collision){
+		if(collision.gameObject == ballRigidbody.gameObject){
 			LaunchBall();
 		}
+	}
+
+	private void HandleObjectCollidingWithPaddle(Collision collision){
+		if(collision.gameObject == ballRigidbody.gameObject){
+
+			// Get the point of contact
+			Vector3 collisionPoint = collision.contacts[0].point;
+
+			// Create the collision effect at the postion of the ball
+			GameObject newEffect = Instantiate(ballCollisionEffect,collisionPoint,Quaternion.identity);
+
+			//Get the effect particle effect
+			ParticleSystem effectParticleSystem = newEffect.GetComponent<ParticleSystem>();
+
+			//Start the coroutine
+			StartCoroutine(DestroyDeadEffect(effectParticleSystem));
+		}
+	}
+
+	// Coroutines are functions that can be executed over multiple updates
+	// The function will pause until the next update on "yield return null"
+	IEnumerator DestroyDeadEffect(ParticleSystem targetParticleSystem){
+		
+		// While the system is alive
+		while(targetParticleSystem.IsAlive()){
+			
+			// Keep pausing
+			yield return null;
+		}
+
+		// After escaping the loop, destroy the effect
+		Destroy(targetParticleSystem.gameObject);
 	}
 }
