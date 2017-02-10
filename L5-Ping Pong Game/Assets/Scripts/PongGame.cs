@@ -35,6 +35,9 @@ public class PongGame : MonoBehaviour {
 		// Ball is moved to the launch position first
 		ballRigidbody.transform.position = ballStartPin.position;
 
+		// Stop the balls movement before applying velocity;
+		ballRigidbody.velocity = Vector3.zero;
+
 		// Normalize the the force vector so it's magnitude (ie the ball's velocity) will always be 1
 		Vector3 appliedForce = Random.insideUnitCircle.normalized;
 
