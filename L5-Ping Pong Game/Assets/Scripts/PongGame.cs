@@ -10,6 +10,8 @@ public class PongGame : MonoBehaviour {
 	[SerializeField]
 	private Rigidbody ballRigidbody;
 	[SerializeField]
+	private TrailRenderer ballTrailRenderer;
+	[SerializeField]
 	private Transform ballStartPin;
 	[SerializeField]
 	private Transform rPaddle;
@@ -28,6 +30,8 @@ public class PongGame : MonoBehaviour {
 	}
 
 	private void LaunchBall(){
+		ballTrailRenderer.Clear();
+
 		// Ball is moved to the launch position first
 		ballRigidbody.transform.position = ballStartPin.position;
 
