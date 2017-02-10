@@ -1,8 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PongGame : MonoBehaviour {
+	[SerializeField]
+	private Text rScoreText;
+	[SerializeField]
+	private Text lScoreText;
 	[SerializeField]
 	private float paddleSpeed;
 	[SerializeField]
@@ -20,11 +25,31 @@ public class PongGame : MonoBehaviour {
 	[SerializeField]
 	private ColliderSurrogate lGoal;
 
+	private int rScore;
+	private int lScore;
+
 	private void Start(){
 		LaunchBall();
 
-		rGoal.Initialize(HandleObjectCollidingWithGoal);
-		lGoal.Initialize(HandleObjectCollidingWithGoal);
+		// Lambda expressions serve as micro functions within a function. 
+		// Their sytax is: "(Parameter p) => {do function actions here;}"
+		// This allows you to create functions that would only exist within the scope that is necessary
+		rGoal.Initialize((GameObject collidedObject) => {
+
+			// Increase the score for lPlayer for scoring on rGoal
+			lScore++;
+
+			// Update the scoreboard
+			lScoreText.text = lScore.ToString();
+
+			// Continue with previous actions
+			HandleObjectCollidingWithGoal(collidedObject);
+		});
+		lGoal.Initialize((GameObject collidedObject) => {
+			rScore++;
+			rScoreText.text = rScore.ToString();
+			HandleObjectCollidingWithGoal(collidedObject);
+		});
 	}
 
 	private void LaunchBall(){
