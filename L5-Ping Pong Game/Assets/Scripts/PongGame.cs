@@ -19,6 +19,10 @@ public class PongGame : MonoBehaviour {
 	private ColliderSurrogate rGoal;
 	[SerializeField]
 	private ColliderSurrogate lGoal;
+	[SerializeField]
+	private Transform upBoundPin;
+	[SerializeField]
+	private Transform downBoundPin;
 
 	private void Start(){
 		LaunchBall();
@@ -68,6 +72,10 @@ public class PongGame : MonoBehaviour {
 		// Because of this, paddleObject.position is not a reference to an object but a copy of the values stored
 		Vector3 currentPosition = paddleObject.position;
 		currentPosition.y += paddleYDelta;
+
+		// Clamp position within bounds
+		currentPosition.y = Mathf.Clamp(currentPosition.y,downBoundPin.position.y,upBoundPin.position.y);
+
 		paddleObject.position = currentPosition;
 	}
 
