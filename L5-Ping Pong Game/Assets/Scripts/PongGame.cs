@@ -19,6 +19,8 @@ public class PongGame : MonoBehaviour {
 	private ColliderSurrogate rGoal;
 	[SerializeField]
 	private ColliderSurrogate lGoal;
+	[SerializeField]
+	private GameObject goalTextDisplay;
 
 	private void Start(){
 		LaunchBall();
@@ -30,6 +32,9 @@ public class PongGame : MonoBehaviour {
 	private void LaunchBall(){
 		// Ball is moved to the launch position first
 		ballRigidbody.transform.position = ballStartPin.position;
+
+		// Activate after moving to prevent a collision even being called
+		ballRigidbody.gameObject.SetActive(true);
 
 		// Stop the balls movement before applying velocity;
 		ballRigidbody.velocity = Vector3.zero;
@@ -73,7 +78,29 @@ public class PongGame : MonoBehaviour {
 
 	private void HandleObjectCollidingWithGoal(GameObject collidedObject){
 		if(collidedObject == ballRigidbody.gameObject){
-			LaunchBall();
+			StartCoroutine(GoalCoroutine());
 		}
 	}
+
+	// Coroutines are functions that can be executed over multiple updates
+	// "yield return null" pauses the function until next update
+	private IEnumerator GoalCoroutine(){
+		// Deactivate the ball
+		ballRigidbody.gameObject.SetActive(false);
+		// Activate the "Goal!" sign
+		goalTextDisplay.gameObject.SetActive(true);
+
+		// Calculate the time of the goal celebration
+		float endTime = Time.time + 2f;
+		// While the system is alive
+		while(Time.time < endTime){
+			// Keep pausing
+			yield return null;
+		}
+
+		// Deactivate the "Goal!" sign
+		goalTextDisplay.gameObject.SetActive(false);
+		LaunchBall();
+	}
+
 }
